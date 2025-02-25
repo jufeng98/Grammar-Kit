@@ -132,7 +132,7 @@ public class SampleParserUtil {
 5. 当默认的左关联性不合适时，使用 *rightAssociative* 属性
 
 以下代码片段演示了BNF "expression" 部分看起来很紧凑,
-所描述的语法不会对普通的BNF语法造成太大破坏 ([完整示例](grammars/ExprParser.bnf)):
+所描述的语法不会对普通的BNF语法造成太大破坏 ([完整示例](testData/generator/ExprParser.bnf)):
 
 ````
 // 为了保留此示例，省略了短函数调用和其他表达式
