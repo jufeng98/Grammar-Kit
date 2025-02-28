@@ -7,12 +7,12 @@ Grammar-Kit
 [![X Follow](https://img.shields.io/badge/follow-%40JBPlatform-1DA1F2?logo=x)][jb:x]
 [![Slack](https://img.shields.io/badge/Slack-%23intellij--platform-blue?style=flat-square&logo=Slack)][jb:slack]
 
-面向语言插件开发者的 [IntelliJ IDEA 插件](http://plugins.jetbrains.com/plugin/6606)。
+面向语言插件开发者的[IntelliJ IDEA 插件](http://plugins.jetbrains.com/plugin/6606)。
 
 添加BNF语法和JFlex文件编辑支持，以及解析器/PSI代码生成器。
 
-快速链接: [最新开发构建](https://teamcity.jetbrains.com/guestAuth/app/rest/builds/buildType:IntellijIdeaPlugins_GrammarKit_Build,status:SUCCESS/artifacts/content/GrammarKit*.zip),
-[变更日志](CHANGELOG.md), [教程](TUTORIAL-CN.md), [用法](HOWTO-CN.md)
+快速链接: [最新开发构建](https://teamcity.jetbrains.com/guestAuth/app/rest/builds/buildType:IntellijIdeaPlugins_GrammarKit_Build,status:SUCCESS/artifacts/content/GrammarKit*.zip)，
+[变更日志](CHANGELOG.md)， [教程](TUTORIAL-CN.md)， [用法](HOWTO-CN.md)
 
 > [!重要]
 >
@@ -20,28 +20,28 @@ Grammar-Kit
 
 使用Grammar Kit构建的开源插件：
 
-* [Clojure-Kit](https://github.com/gregsh/Clojure-Kit), 
-  [intellij-rust](https://github.com/intellij-rust/intellij-rust),
-  [intellij-erlang](https://github.com/ignatov/intellij-erlang),
+* [Clojure-Kit](https://github.com/gregsh/Clojure-Kit)， 
+  [intellij-rust](https://github.com/intellij-rust/intellij-rust)，
+  [intellij-erlang](https://github.com/ignatov/intellij-erlang)，
   [intellij-elm](https://github.com/intellij-elm/intellij-elm)
-* [intellij-elixir](https://github.com/KronicDeth/intellij-elixir),
-  [Perl5-IDEA](https://github.com/Camelcade/Perl5-IDEA),
-  [Dart](https://github.com/JetBrains/intellij-plugins/tree/master/Dart), 
-  [intellij-haxe](https://github.com/HaxeFoundation/intellij-haxe),
+* [intellij-elixir](https://github.com/KronicDeth/intellij-elixir)，
+  [Perl5-IDEA](https://github.com/Camelcade/Perl5-IDEA)，
+  [Dart](https://github.com/JetBrains/intellij-plugins/tree/master/Dart)， 
+  [intellij-haxe](https://github.com/HaxeFoundation/intellij-haxe)，
   [Cypher](https://github.com/neueda/jetbrains-plugin-graph-database-support)
 
-另请参见 [自定义语言支持教程](https://plugins.jetbrains.com/docs/intellij/custom-language-support-tutorial.html).
+另请参见 [自定义语言支持教程](https://plugins.jetbrains.com/docs/intellij/custom-language-support-tutorial.html)。
 
 一般使用说明
 --------------------------
-1. 创建 grammar \*.bnf 文件, 参见插件代码中的 [Grammar.bnf](grammars/Grammar.bnf)。
+1. 创建 grammar \*.bnf 文件， 参见插件代码中的[Grammar.bnf](grammars/Grammar.bnf)。
 2. 使用“实时预览”调整语法结构视图（Ctrl-Alt-P / Cmd-Alt-P）
 3. 生成 解析器/ElementTypes/PSI 类 (Ctrl-Shift-G / Cmd-Shift-G)
 4. 生成lexer\*.flex文件，然后运行JFlex生成器（均通过上下文菜单） 
 5. 实现ParserDefinition然后注册到plugin.xml
 6. 将混合解析及其他复杂功能集成至PSI
 
-与Gradle一起使用
+与 Gradle 一起使用
 -----------------
 
 如上所述，从IDE调用解析器和生成器是首选方式。<br/>
@@ -64,7 +64,7 @@ Grammar-Kit
 * 导航: 在属性模式内跳转到匹配表达式 (Ctrl-B/Cmd-B)
 * 高亮: 自定义颜色 (通过 Settings/Colors and Fonts)
 * 高亮: 锚点表达式标识 (悬停工具提示当前锚点值逻辑上下文)
-* 高亮: 语法检查, 可通过 Settings/Inspections 查看列表
+* 高亮: 语法检查， 可通过 Settings/Inspections 查看列表
 * 文档: FIRST/FOLLOWS/PSI 内容规则文档悬浮提示 (Ctrl-Q/Cmd-J)
 * 文档: 属性文档悬浮提示 (Ctrl-Q/Cmd-J)
 * [实时预览](TUTORIAL-CN.md): 打开语言实时预览编辑器 (Ctrl-Alt-P/Cmd-Alt-P)
@@ -78,7 +78,7 @@ Grammar-Kit
 
 语法概述
 ===============
-基本语法查阅 [Parsing Expression Grammar (PEG)](http://en.wikipedia.org/wiki/Parsing_expression_grammar)。
+基本语法查阅[Parsing Expression Grammar (PEG)](http://en.wikipedia.org/wiki/Parsing_expression_grammar)。
 使用 ::= 表示 ← 符号。您还可以使用[..]表示可选序列，使用{||}表示选择，因为这些变体在现实世界的语法中很受欢迎。
 Grammar-Kit 源代码是 Grammar-Kit 应用的主要示例。
 可以在[这里](grammars/Grammar.bnf)找到BNF解析器和PSI生成的语法。
@@ -139,11 +139,11 @@ static boolean rule_name_N1_N2_..._NX      // 规则 子-子-...-子-表达式
    
 7. *fake* (PSI 类):  用于对生成的PSI类进行整形的规则；仅生成PSI类。
 
-修饰符可以组合使用, *inner* 只应该和 *left* 一起使用，
+修饰符可以组合使用， *inner* 只应该和 *left* 一起使用，
 *private left* 等同 *private left inner*， 
 *fake* 不应该和 *private* 组合使用。
 
-默认情况下, 规则是 *public*, 即 *non-private*, *non-fake*, 等等。
+默认情况下， 规则是 *public*， 即 *non-private*， *non-fake*， 等等。
 
 ### 元规则和外部表达式：
 外部表达式 *<< ... >>* 只是外部规则的内联变体。它还可以用于指定元规则和参数。
@@ -166,22 +166,22 @@ option_list ::= <<comma_separated_list (OPTION1 | OPTION2 | OPTION3)>>
 作为参数，按“原样”传递，但单引号字符串除外，这些字符串首先会去掉引号。
 这有助于传递限定的枚举常量、java表达式等。
 
-参数列表中的规则引用实现为 [GeneratedParserUtilBase.Parser](src/org/intellij/grammar/parser/GeneratedParserUtilBase.java) 实例.
+参数列表中的规则引用实现为 [GeneratedParserUtilBase.Parser](src/org/intellij/grammar/parser/GeneratedParserUtilBase.java) 实例。
 
 ### Tokens:
-显式token通过 _tokens_ 全局属性声明，例如以 *token_name=token_value* 形式。
-token名称是IElementType token常量的名称，token值通常是用单引号或双引号表示的字符串。
+显式 token 通过 _tokens_ 全局属性声明，例如以 *token_name=token_value* 形式。
+token 名称是 IElementType token 常量的名称，token 值通常是用单引号或双引号表示的字符串。
 
-语法中的token可以通过名称或单引号或双引号中的值来引用。
+语法中的 token 可以通过名称或单引号或双引号中的值来引用。
 建议在可能的情况下使用值，以提高可读性。
 当存在与某些规则匹配的未加引号的令牌值时，可以使用名称来解决冲突。
 
-隐式token是指未通过 _tokens_ 属性指定的token。
-无引号隐式token（也称为关键字token）的名称等于其值。
-有引号的隐式token（也称为文本匹配token）速度较慢，因为它们是由文本匹配的，而不是由词法分析器返回的IElementType常量匹配的。
-文本匹配的token可以跨越词法分析器返回的多个真实token。
+隐式 token 是指未通过 _tokens_ 属性指定的 token 。
+无引号隐式 token（也称为关键字token）的名称等于其值。
+有引号的隐式 token（也称为文本匹配token）速度较慢，因为它们是由文本匹配的，而不是由词法分析器返回的 IElementType 常量匹配的。
+文本匹配的 token 可以跨越词法分析器返回的多个真实 token 。
 
-规则、token和文本匹配token具有不同的颜色。
+规则、token 和文本匹配 token 具有不同的颜色。
 
 ### 错误恢复和报告的属性：
 * _pin_ （锚点，值：数字或模式）调整解析器以处理不完整的匹配。
@@ -205,7 +205,7 @@ Pin值通过数字 *{Pin=2}* 或模式 *{Pin="rule_B"}* 表示所需的锚点项
 
 实际的错误恢复和报告代码以及基于解析器的补全提供者支持代码和基本token匹配代码位于_parserUtilClass_类中。 
 可以通过指定一些其他继承或模仿原始[GeneratedParserUtilBase](src/org/intellij/grammar/parser/GeneratedParserUtilBase.java)的类来修改它。
-无需在项目中保留 GeneratedParserUtilBase 的副本, 自12.1版本起已包含在*IntelliJ Platform*中。
+无需在项目中保留 GeneratedParserUtilBase 的副本， 自12.1版本起已包含在*IntelliJ Platform*中。
 
 手动解析的代码，即 _external_ rules，必须采用和生成相同的方式实现，
 通过 _parserUtilClass_ 类中的静态方法或任何其他通过 _parserImports_ 属性导入的类，就像这样：
@@ -220,7 +220,7 @@ Pin值通过数字 *{Pin=2}* 或模式 *{Pin="rule_B"}* 表示所需的锚点项
 基于JFlex的词法分析器可以从定义了所有必需token的语法中生成（*Generate JFlex lexer*菜单）。
 
 *在\*.flex文件中运行JFlex Generator*菜单，调用JFlex生成lexer java代码。
-关键字是从用法中直接选择的，而*string*、*identifier*和*comment*等token可以这样定义 (来自 [教程](TUTORIAL-CN.md)):
+关键字是从用法中直接选择的，而 *string* 、 *identifier* 和 *comment* 等 token 可以这样定义 (来自[教程](TUTORIAL-CN.md))：
 
 ````
 {
@@ -236,7 +236,7 @@ Pin值通过数字 *{Pin=2}* 或模式 *{Pin="rule_B"}* 表示所需的锚点项
 }
 ````
 
-虽然 *实时预览* 模式支持完整的Java RegExp语法，然而JFlex仅支持一个子集 (查阅 [JFlex documentation](http://jflex.de/manual.html#SECTION00053000000000000000))
+虽然 *实时预览* 模式支持完整的Java RegExp语法，然而JFlex仅支持一个子集 (查阅[JFlex文档](http://jflex.de/manual.html#SECTION00053000000000000000))
 Grammar-Kit 会试图执行一些明显的转换。
 
 词法器可以单独提供，也可以使用生成的 \*.flex 文件作为基础。
@@ -244,7 +244,7 @@ Grammar-Kit 会试图执行一些明显的转换。
 默认情况下，解析器和生成器生成token类型常量和PSI。
 这可以分别通过 *generateTokens* 和 *generatePSI* 全局布尔属性关闭。
 
-*elementType* 规则属性允许混合生成的代码和一些现有的手工PSI。 
+*elementType* 规则属性允许混合生成的代码和一些现有的手写PSI。 
 
 [jb:slack]: https://plugins.jetbrains.com/slack
 [jb:x]: https://x.com/JBPlatform

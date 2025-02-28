@@ -1,9 +1,7 @@
----
-
 I. 一般注意事项
 ===============
 
-1. 编写语法并不意味着生成的解析器会工作并产生良好的AST。
+1. 编写bnf语法并不意味着生成的解析器能工作并产生良好的AST。
    棘手的部分是将一些 *看起来正确* 的原始语法 **调整** 为 *可工作* 的语法，即生成可工作解析器的语法。
    一旦你掌握了一些基础知识，剩下的就像将不同的块组合成一个工作解决方案一样简单。
 2. 在编辑语法时，最好认为您在更高的抽象级别上操纵生成的代码。
@@ -17,11 +15,11 @@ II. 指南: 生成解析器
 2.1 解析器基础
 --------------
 
-每个规则要么匹配要么不匹配，因此每个BNF表达式都是布尔表达式。
-**True** 表示输入序列的某些部分匹配，**false** *总是*表示即使输入的某些部分被匹配，也没有任何东西被匹配。
-以下是一些语法到代码的映射：
+每条规则要么匹配要么不匹配，因此每个BNF表达式都是布尔表达式。
+**true** 表示输入序列的某些部分匹配，**false** *总是*表示即使输入的某些部分匹配，也没有任何东西被匹配。
+以下是一些bnf语法到代码的映射示例：
 
-顺序:
+顺序规则（表示part1 part2 part3要依次匹配）:
 
 ````
 // rule ::= part1 part2 part3
@@ -37,7 +35,7 @@ public boolean rule() {
 }
 ````
 
-有序选择:
+有序选择规则（表示匹配part1或part2或part3）:
 
 ````
 // rule ::= part1 | part2 | part3
@@ -53,7 +51,7 @@ public boolean rule() {
 }
 ````
 
-零个或多个构造：
+零个或多个构造规则（表示匹配任意个part）：
 
 ````
 // rule ::= part *
@@ -69,13 +67,13 @@ public boolean rule() {
 
 相应地实现了 *一个或多个*、*可选*、*且谓语* 和 *非谓语* 构造。
 如您所见，生成的代码可以像任何手写代码一样轻松调试。
-像 *pin* 和 *recoverWhile* 这样的属性、规则修饰符为这个通用结构添加了一些行。
+像 *pin* 和 *recoverWhile* 这样的属性、规则修饰符则为这个通用结构添加了一些行。
 
 2.2 使用 *recoverWhile（错误恢复）* 属性
 ----------------------------------------
 
 1. 在大多数情况下，应在循环内的规则上指定此属性
-2. 该规则也应始终在某处具有 *pin*属性
+2. 该规则也应始终在某处具有 *pin* 属性
 3. 属性值应该是谓词规则，即保持输入不变
 
 规则定义如下：
@@ -88,7 +86,7 @@ script ::= statement *
 private statement ::= select_statement | delete_statement | ... {recoverWhile="statement_recover"}
 private statement_recover ::= !(';' | SELECT | DELETE | ...)
 select_statement ::= SELECT ... {pin=1}  // 锚点会匹配某些东西
-                                         // pin="SELECT" 是一个有效的替代选项
+                                         // pin="SELECT" 也是一个有效的替代写法
 ````
 
 2.3 当没有东西能提供帮助时: *external（外部）* 规则
@@ -105,14 +103,14 @@ select_statement ::= SELECT ... {pin=1}  // 锚点会匹配某些东西
 external my_external_rule ::= parseMyExternalRule false 10  // 我们可以传递一些额外参数
                                                             // .. 甚至是其他规则!
 rule ::= part1 my_external_rule part3
-// rule ::= part1 <<parseMyExternalRule true 5>> part3      // 是一个有效的替代选项
+// rule ::= part1 <<parseMyExternalRule true 5>> part3      // 也是一个有效的替代写法
 ````
 
 ````
 public class SampleParserUtil {
   public static boolean parseMyExternalRule(PsiBuilder builder, int level,       // 必需参数
                                             boolean extraArg1, int extraArg2) {  // 额外参数
-    // 开展工作，询问观众，给朋友打电话
+    // 开展工作，询问观众，给朋友打电话等等
   }
 }
 ````
@@ -121,10 +119,10 @@ public class SampleParserUtil {
 ------------------------------
 
 当涉及到表达式时，递归下降解析器在堆栈深度方面效率低下。
-支持一种更自然、更紧凑的处理方式。
+我们支持一种更自然、更紧凑的处理方式。
 
 1. 所有 "表达式" 规则应该继承 "根表达式" 规则。
-   如果操作正确，这将确保AST即使在出现错误的情况下也具有最佳的深度和一致性。
+   如果操作正确，这将确保 AST 即使在出现错误的情况下也具有最佳的深度和一致性。
    由于 *extends* 属性语义，冗余节点将被折叠，并且根表达式规则节点将永远不会出现在AST中, 使用 *快速文档* (Ctrl-Q/Ctrl-J) 验证。
 2. 优先级从上到下增加，有序选择语义得以保留
 3. 对二进制和后缀表达式使用左递归
@@ -207,13 +205,13 @@ identifier ::= id
   // 5: POSTFIX(ref_expr)
   // 6: ATOM(simple_ref_expr) ATOM(literal_expr) PREFIX(paren_expr)
   public static boolean expr(PsiBuilder builder_, int level_, int priority_) {
-     // code to parse ATOM and PREFIX operators
-     // .. and ..
-     // call expr_0()
+     // 用于解析 ATOM 和 PREFIX 操作符的代码
+     // .. 接着 ..
+     // 调用 expr_0()
   }
 
   public static boolean expr_0(PsiBuilder builder_, int level_, int priority_) {
-     // here goes priority-driven while loop for BINARY, N-ARY and POSTFIX operators
+     // 这里是优先级驱动的while循环，用于BINARY、N-ARY和POSTFIX运算符
   }
 ````
 
@@ -225,7 +223,7 @@ III. 指南: 生成PSI类层次结构
 3.1 PSI 基础
 ------------
 
-1. 若您不希望某条规则出现在AST中，请尽早为该规则添加 *private* 属性。第一条规则将隐式标记为 *private*。
+1. 若您不希望某条规则出现在 AST 中，请尽早为该规则添加 *private* 属性。第一条规则将隐式标记为 *private*。
 2. 使用 "extends" 属性同时达到两个目的：一是让PSI层次结构更合理，二是使AST更扁平。
 
 ````
@@ -242,8 +240,8 @@ expr ::= factor add_expr *
 private factor ::= primary mul_expr *   // 在 AST 中我们不需要这个节点
 private primary ::= literal_expr        // .. 还有这个节点
 left add_expr ::= ('+'|'-') factor      // 如果使用没有 "left" 规则的经典递归下降
-left mul_expr ::= ('*'|'/') primary     //    那么没有 "extends" 的AST看起来会更糟
-literal_expr ::= ...                    //    FileNode/Expr/AddExpr/MulExpr/LiteralExpr
+left mul_expr ::= ('*'|'/') primary     // 那么没有 "extends" 的 AST 看起来会更糟
+literal_expr ::= ...                    // FileNode/Expr/AddExpr/MulExpr/LiteralExpr
 ````
 
 3.2 使用 *fake（伪）* 规则和用户方法组织 PSI
@@ -306,7 +304,7 @@ public class Visitor extends PsiElementVisitor {
   mixin("my_named")="com.sample.psi.impl.MyNamedImplMixin"
 }
 my_named ::= part1 part2 part3
-// my_named ::= part1 part2 part3 {mixin="com.sample.psi.impl.MyNamedImplMixin"} // 也是有效的替代选项
+// my_named ::= part1 part2 part3 {mixin="com.sample.psi.impl.MyNamedImplMixin"} // 也是有效的替代写法
 
 ````
 
@@ -342,10 +340,10 @@ public class SamplePsiImplUtil {
 3.5 存根索引支持
 ----------------
 
-存根索引API强制对PSI类使用不同的规约：
+存根索引 API 强制对 PSI 类使用不同的规约：
 
-* 应该有一个手动编写的所谓的 *stub*类
-* PSI节点类型应扩展 _IStubElementType_(与通常的 _IElementType_相比)
+* 应该有一个手动编写的所谓的 *stub* 类
+* PSI节点类型应扩展 _IStubElementType_ (与通常的 _IElementType_ 相比)
 * PSI接口应扩展 _StubBasedPsiElementBase&lt;StubClass&gt;_
 * PSI实现类应扩展 _StubBasedPsiElementBase&lt;StubClass&gt;_
 
@@ -405,7 +403,7 @@ V. 独立使用POC
 
 本节仅为 **概念证明** 。下面描述的所有内容都不受支持，而且肯定已经过时。
 
-Grammar Kit项目提供工件配置来构建`Grammar Kit.jar`和`expression console sample.jar`，
+Grammar Kit 项目提供工件配置来构建`Grammar Kit.jar`和`expression console sample.jar`，
 以及构建“light-psi-all.jar”的运行配置（在一个文件中仅包含所需的 *IntelliJ Platform* 类）。
 
 为了启用最简的 `java -jar grammar-kit.jar ...` 命令需要的jar已经位于
@@ -427,7 +425,7 @@ java -jar grammar-kit.jar <output-dir> <grammars-and-dirs>
 java -cp grammar-kit.jar;<all-the-needed-jars> org.intellij.grammar.Main <output-dir> <grammars-and-dirs>
 ````
 
-查阅 [expression parser](grammars/ExprParser.bnf):
+查阅 [expression parser](testData/generator/ExprParser.bnf):
 
 ````
 java -jar expression-console-sample.jar
